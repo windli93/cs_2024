@@ -25,7 +25,7 @@ public class Demo1_3 {
                     e.printStackTrace();
                 }
                 synchronized (b) {
-                    System.out.println("我获得了a 和 b");
+                    System.out.println("我获得了a和b");
                 }
             }
         }).start();
