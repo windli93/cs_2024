@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="6019496d-6871-4738-87a8-902450eff1c7" name="Default Changelist" comment="添加文件" />
+    <list default="true" id="6019496d-6871-4738-87a8-902450eff1c7" name="Default Changelist" comment="添加文件">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -37,8 +40,9 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/basic/basic_03.js" />
-    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="show.migrate.to.gradle.popup" value="false" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -51,17 +55,6 @@
     </key>
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="class" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="NodeJSConfigurationType" path-to-js-file="$PROJECT_DIR$/basic/basic_03.js">
       <method v="2" />
     </configuration>
@@ -78,6 +71,13 @@
       <option name="presentableId" value="Default" />
       <updated>1724929415015</updated>
       <workItem from="1724929416128" duration="972000" />
+      <workItem from="1724931064843" duration="2374000" />
+      <workItem from="1724969069060" duration="3920000" />
+      <workItem from="1725090531680" duration="597000" />
+      <workItem from="1725342370904" duration="1237000" />
+      <workItem from="1725372334838" duration="1997000" />
+      <workItem from="1725446472502" duration="3162000" />
+      <workItem from="1725522520969" duration="779000" />
     </task>
     <task id="LOCAL-00001" summary="添加文件">
       <created>1724929799644</created>
@@ -102,6 +102,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加文件" />
