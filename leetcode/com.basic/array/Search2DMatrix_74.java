@@ -35,7 +35,7 @@ package array;
     1 <= m, n <= 100
     -104 <= matrix[i][j], target <= 104*/
 
-public class NumberSearch2DMatrix_74 {
+public class Search2DMatrix_74 {
 
     public boolean searchMatrix(int[][] matrix, int target) {
 

@@ -35,7 +35,7 @@ package array;
     nums contains distinct values sorted in ascending order.
             -104 <= target <= 104*/
 
-public class NumberSearch_35 {
+public class SearchInsertPosition_35 {
 
 
 
@@ -61,7 +61,7 @@ public class NumberSearch_35 {
 
     public static void main(String[] args) {
         int[] nums = new int[]{1, 3, 5, 6};
-        NumberSearch_35 search35 = new NumberSearch_35();
+        SearchInsertPosition_35 search35 = new SearchInsertPosition_35();
         int result = search35.searchInsert(nums, 7);
         System.out.println("result: " + result);
     }

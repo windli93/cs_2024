@@ -36,11 +36,11 @@ import java.util.Arrays;
         At most 104 calls will be made to sumRange.
         */
 
-public class NumArray_303 {
+public class RangeSumQuery_303 {
 
     private int[] prefixSum;
 
-    public NumArray_303(int[] nums) {
+    public RangeSumQuery_303(int[] nums) {
         // 初始化前缀和数组，长度比nums长1，方便计算前缀和
         prefixSum = new int[nums.length + 1];
         for (int i = 0; i < nums.length; i++) {
@@ -58,7 +58,7 @@ public class NumArray_303 {
     public static void main(String[] args) {
         //前缀法解题
         int[] nums = new int[]{-2, 0, 3, -5, 2, -1};
-        NumArray_303 array = new NumArray_303(nums);
+        RangeSumQuery_303 array = new RangeSumQuery_303(nums);
         int result1 = array.sumRange(0, 2);
         System.out.println(result1);
         int result2 = array.sumRange(2, 5);

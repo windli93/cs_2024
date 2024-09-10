@@ -32,7 +32,7 @@ import java.util.Arrays;
 
         Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)*/
 
-public class Solution_238 {
+public class ProductSelf_238 {
     public int[] productExceptSelf(int[] nums) {
         int n = nums.length;
         int[] answer = new int[n];
@@ -60,7 +60,7 @@ public class Solution_238 {
 
     public static void main(String[] args) {
         int[] nums = new int[]{1, 2, 3, 4};
-        Solution_238 solution238 = new Solution_238();
+        ProductSelf_238 solution238 = new ProductSelf_238();
         int[] result = solution238.productExceptSelf(nums);
         System.out.println(Arrays.toString(result));
     }
