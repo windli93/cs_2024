@@ -51,6 +51,7 @@ public class NumberSearch2DMatrix_74 {
             //计算中间位置
             int mid = left + (right - left) / 2;
             //将一维数组转为行和列
+            // 关键点在这里
             int row = mid / n;
             int col = mid % n;
 
