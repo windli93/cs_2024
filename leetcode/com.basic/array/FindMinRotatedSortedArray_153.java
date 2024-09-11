@@ -51,7 +51,7 @@ public class FindMinRotatedSortedArray_153 {
         //2. 二分查找，得到最小数
 
         int left = 0, right = nums.length - 1;
-        //这里数据不会有重合，不需要等于，否则会死循环
+        //这里不能用闭区间，否则会死循环
         while (left < right) {
             int mid = left + (right - left) / 2;
             if (nums[mid] > nums[right]) {
