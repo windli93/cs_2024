@@ -1,3 +1,5 @@
+package basic;
+
 /**
  * @Author hongjian.li
  * @Description 单链表实现
@@ -30,7 +32,7 @@ public class SingleLinkedList {
 
     //查
 //    public static void main(String[] args) {
-//        SingleLinkedList singleLinkedList = new SingleLinkedList();
+//        basic.SingleLinkedList singleLinkedList = new basic.SingleLinkedList();
 //        //创建一个单链表
 //        ListNode head = singleLinkedList.createLinkedList(new int[]{1, 2, 3, 4, 5});
 //        for (ListNode p = head; p != null; p = p.next) {
@@ -40,17 +42,17 @@ public class SingleLinkedList {
 
     //改
 //    public static void main(String[] args) {
-//        SingleLinkedList singleLinkedList = new SingleLinkedList();
+//        basic.SingleLinkedList singleLinkedList = new basic.SingleLinkedList();
 //        ListNode head = singleLinkedList.createLinkedList(new int[]{1, 2, 3, 4, 5});
 //
-//        SingleLinkedList.ListNode newHead = new SingleLinkedList.ListNode(0);
+//        basic.SingleLinkedList.ListNode newHead = new basic.SingleLinkedList.ListNode(0);
 //        newHead.next = head;
 //        head = newHead;
 //    }
 
     //改
 //    public static void main(String[] args) {
-//        SingleLinkedList singleLinkedList = new SingleLinkedList();
+//        basic.SingleLinkedList singleLinkedList = new basic.SingleLinkedList();
 //        ListNode head = singleLinkedList.createLinkedList(new int[]{1, 2, 3, 4, 5});
 //        //单链表插入新节点 6
 //        ListNode p = head;
@@ -66,7 +68,7 @@ public class SingleLinkedList {
 
     //增
 //    public static void main(String[] args) {
-//        SingleLinkedList singleLinkedList = new SingleLinkedList();
+//        basic.SingleLinkedList singleLinkedList = new basic.SingleLinkedList();
 //        ListNode head = singleLinkedList.createLinkedList(new int[]{1, 2, 3, 4, 5});
 //
 //        ListNode p = head;
@@ -84,7 +86,7 @@ public class SingleLinkedList {
 
     //删
 //    public static void main(String[] args) {
-//        SingleLinkedList singleLinkedList = new SingleLinkedList();
+//        basic.SingleLinkedList singleLinkedList = new basic.SingleLinkedList();
 //        ListNode head = singleLinkedList.createLinkedList(new int[]{1, 2, 3, 4, 5});
 //
 //        ListNode p = head;

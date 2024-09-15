@@ -1,3 +1,5 @@
+package basic;
+
 /**
  * @Author hongjian.li
  * @Description 双链表
@@ -31,7 +33,7 @@ public class DoubleLinkedList {
     }
 
 //    public static void main(String[] args) {
-//        DoubleLinkedList linkedList = new DoubleLinkedList();
+//        basic.DoubleLinkedList linkedList = new basic.DoubleLinkedList();
 //        DoubleListNode head = linkedList.createDoubleList(new int[]{1, 2, 3, 4, 5});
 //
 //        //从头遍历数据
@@ -46,7 +48,7 @@ public class DoubleLinkedList {
 //    }
 
 //    public static void main(String[] args) {
-//        DoubleLinkedList linkedList = new DoubleLinkedList();
+//        basic.DoubleLinkedList linkedList = new basic.DoubleLinkedList();
 //        DoubleListNode head = linkedList.createDoubleList(new int[]{1, 2, 3, 4, 5});
 //
 //        // 在双链表头部插入新节点 0
@@ -58,7 +60,7 @@ public class DoubleLinkedList {
 //    }
 
 //    public static void main(String[] args) {
-//        DoubleLinkedList linkedList = new DoubleLinkedList();
+//        basic.DoubleLinkedList linkedList = new basic.DoubleLinkedList();
 //        DoubleListNode head = linkedList.createDoubleList(new int[]{1, 2, 3, 4, 5});
 //        DoubleListNode tail = head;
 //        // 先走到链表的最后一个节点
@@ -76,7 +78,7 @@ public class DoubleLinkedList {
 //    }
 
 //    public static void main(String[] args) {
-//        DoubleLinkedList linkedList = new DoubleLinkedList();
+//        basic.DoubleLinkedList linkedList = new basic.DoubleLinkedList();
 //        DoubleListNode head = linkedList.createDoubleList(new int[]{1, 2, 3, 4, 5});
 //
 //        // 在第 3 个节点后面插入新节点 66

@@ -1,3 +1,5 @@
+package basic;
+
 public class Arrays1 {
 
     //静态数组
