@@ -1,4 +1,4 @@
-package node;
+package Linkedlist;
 
 /**
  * @Author hongjian.li

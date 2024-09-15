@@ -1,4 +1,4 @@
-package node;
+package Linkedlist;
 
 /**
  * @Author hongjian.li
@@ -45,18 +45,28 @@ public class LinkedListCycle_141 {
 
 
     public static void main(String[] args) {
-        // 初始化链表1
+        // 初始化链表
         int[] values = {3, 2, 0, -4};
         LinkedListCycle_141.ListNode head = new LinkedListCycle_141.ListNode(values[0]);
         LinkedListCycle_141.ListNode nodeA = head;
+        LinkedListCycle_141.ListNode cycleNode = null; // 用于保存环的起点
 
         for (int i = 1; i < values.length; i++) {
             nodeA.next = new LinkedListCycle_141.ListNode(values[i]);
             nodeA = nodeA.next;
+
+            // 将链表中的第2个节点作为环的起点
+            if (i == 1) {
+                cycleNode = nodeA; // 环的起点
+            }
         }
 
+        // 形成环，将最后一个节点指向链表中的某个节点（如第2个节点，值为2）
+        nodeA.next = cycleNode;
+
+        // 检查是否存在环
         LinkedListCycle_141 cycle141 = new LinkedListCycle_141();
         boolean result = cycle141.hasCycle(head);
-        System.out.println(result);
+        System.out.println("链表中是否存在环: " + result);
     }
 }
