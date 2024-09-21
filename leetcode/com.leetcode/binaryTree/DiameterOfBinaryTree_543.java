@@ -1,4 +1,4 @@
-package doubleLinkedList;
+package binaryTree;
 
 /**
  * @Author hongjian.li

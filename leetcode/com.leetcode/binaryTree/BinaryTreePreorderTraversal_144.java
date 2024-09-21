@@ -1,4 +1,4 @@
-package doubleLinkedList;
+package binaryTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,21 +32,22 @@ public class BinaryTreePreorderTraversal_144 {
     //递归实现前序遍历
     public List<Integer> preorderTraversal(TreeNode root) {
         List<Integer> result = new ArrayList<>();
-        preOrderHelper(root, result);
+        traverse(root, result);
         return result;
     }
 
     //辅助函数
-    private void preOrderHelper(TreeNode node, List<Integer> result) {
+    private void traverse(TreeNode node, List<Integer> result) {
         if (node == null) {
             return; //如果基础节点为空，直接返回
         }
+        //中序遍历就是->先根节点->再左子树->再右子树
         //访问根节点
         result.add(node.val);
         //递归访问左子树
-        preOrderHelper(node.left, result);
+        traverse(node.left, result);
         //递归访问右子树
-        preOrderHelper(node.right, result);
+        traverse(node.right, result);
     }
 
     public static void main(String[] args) {

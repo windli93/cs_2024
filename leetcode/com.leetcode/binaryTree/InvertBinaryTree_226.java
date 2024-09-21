@@ -1,4 +1,4 @@
-package doubleLinkedList;
+package binaryTree;
 
 /**
  * @Author hongjian.li
@@ -28,21 +28,23 @@ public class InvertBinaryTree_226 {
 
     //处理反转逻辑
     public TreeNode invertTree(TreeNode root) {
+        //反转二叉树
+        traverse(root);
+        return root;
+    }
 
-        if (root == null){
-            return root;
+    private void traverse(TreeNode root) {
+        if (root == null) {
+            return;
         }
 
-        //将右边放到左边
+        //前序节点，每个节点需要做的事情就是交换它的左右节点
         TreeNode temp = root.left;
         root.left = root.right;
         root.right = temp;
 
-        //继续迭代
-        invertTree(root.left);
-        invertTree(root.right);
-
-        return root;
+        traverse(root.left);
+        traverse(root.right);
     }
 
     public static void main(String[] args) {

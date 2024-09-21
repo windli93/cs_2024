@@ -1,4 +1,4 @@
-package doubleLinkedList;
+package binaryTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,20 +45,21 @@ public class BinaryTreeInorderTraversal_94 {
 
     public List<Integer> inorderTraversal(TreeNode root) {
         List<Integer> result = new ArrayList<>();
-        inorder(root, result);
+        traverse(root, result);
         return result;
     }
 
-    private void inorder(TreeNode node, List<Integer> result) {
+    private void traverse(TreeNode node, List<Integer> result) {
         if (node == null) {
             return;
         }
+        //中序遍历就是->先左子树->再根节点->再右子树
         //先遍历左子树
-        inorder(node.left, result);
+        traverse(node.left, result);
         //访问根节点
         result.add(node.val);
         //遍历右子树
-        inorder(node.right, result);
+        traverse(node.right, result);
     }
 
     public static void main(String[] args) {
