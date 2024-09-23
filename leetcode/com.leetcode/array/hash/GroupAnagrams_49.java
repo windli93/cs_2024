@@ -1,4 +1,4 @@
-package sum;
+package array.hash;
 
 import java.util.*;
 
