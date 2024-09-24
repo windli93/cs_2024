@@ -13,7 +13,7 @@ public class MoveZeroes_283 {
         int length = nums.length;
         int fast = 0, slow = 0;
         while (fast < length) {
-            //这里是关键，需要符合条件，然后把走的快的数据给慢的数据11
+            //这里是关键，需要符合条件，然后把走的快的数据给慢的数据
             if (nums[fast] != 0) {
                 nums[slow] = nums[fast];
                 slow++;

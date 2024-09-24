@@ -1,5 +1,10 @@
-function navbar() {
-  return <div>About</div>
+function Navbar() {
+ return (
+      <>
+        <div>navbar</div>
+        <img src="/next.svg" alt="Vercel Logo" className="logo" />
+      </>
+  );
 }
 
-export default navbar;
+export default Navbar;

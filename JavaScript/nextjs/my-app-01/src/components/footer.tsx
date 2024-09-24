@@ -1,5 +1,10 @@
-function footer() {
-  return <div>About</div>
+function Footer() {
+    return (
+        <>
+            <div>footer</div>
+            <img src="/vercel.svg" alt="Vercel Logo" className="logo" />
+        </>
+    );
 }
 
-export default footer;
+export default Footer;
