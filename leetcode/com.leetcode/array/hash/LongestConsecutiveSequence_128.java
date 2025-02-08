@@ -38,26 +38,27 @@ public class LongestConsecutiveSequence_128 {
         }
 
         //使用HashSet去重
-        HashSet<Integer> numSet = new HashSet<>();
+        HashSet<Integer> hashSet = new HashSet<>();
         for (int num : nums) {
-            numSet.add(num);
+            hashSet.add(num);
         }
 
-        int longestBreak = 0;
-        for (int num : numSet) {
-            //判断起点
-            if (!numSet.contains(num - 1)) {
+        //进行循环
+        int maxLength = 0;
+        for (int num : nums) {
+            //如果存在前一个数
+            if (!hashSet.contains(num - 1)) {
                 int currentNum = num;
-                int currentSteak = 1;
-                //迭代寻找后续序列元素
-                while (numSet.contains(currentNum + 1)) {
-                    currentNum = currentNum + 1;
-                    currentSteak = currentSteak + 1;
+                int currentMaxLength = 1;
+                //这个递归是关键
+                while (hashSet.contains(currentNum + 1)) {
+                    currentNum += 1;
+                    currentMaxLength += 1;
                 }
-                longestBreak = Math.max(currentSteak, longestBreak);
+                maxLength = Math.max(currentMaxLength, maxLength);
             }
         }
-        return longestBreak;
+        return maxLength;
     }
 
     public static void main(String[] args) {

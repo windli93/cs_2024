@@ -16,6 +16,7 @@ public class GroupAnagrams_49 {
             char[] chars = str.toCharArray();
             Arrays.sort(chars);
             String key = new String(chars);
+            System.out.println("Key " + key + " Chars " + str);
             if (!hashMap.containsKey(key)) {
                 hashMap.put(key, new ArrayList());
             }
