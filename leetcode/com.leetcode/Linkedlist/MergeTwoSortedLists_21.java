@@ -33,7 +33,7 @@ public class MergeTwoSortedLists_21 {
     }
 
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-        //创建一个哨兵节点
+        //创建一个虚节点
         ListNode dummy = new ListNode(-1);
         ListNode current = dummy;
 
