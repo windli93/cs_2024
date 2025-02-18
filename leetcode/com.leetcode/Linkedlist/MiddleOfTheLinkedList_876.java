@@ -55,10 +55,10 @@ public class MiddleOfTheLinkedList_876 {
         }
 
         MiddleOfTheLinkedList_876 linkedList876 = new MiddleOfTheLinkedList_876();
-        ListNode result = linkedList876.middleNode(head);
-        while (result != null) {
-            System.out.println(result.val);
-            result = result.next;
+        ListNode middle = linkedList876.middleNode(head);
+        while (middle != null) {
+            System.out.println(middle.val);
+            middle = middle.next;
         }
     }
 }
