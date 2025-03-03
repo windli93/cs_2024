@@ -30,7 +30,6 @@ public class MessageAckConsumer implements ChannelAwareMessageListener {
         try {
             //接收转换消息
             System.out.println(new String(message.getBody()));
-
             //处理业务逻辑
             System.out.println("处理业务逻辑");
             //消息确认

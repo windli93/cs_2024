@@ -47,7 +47,7 @@ public class ThreadExample {
         MyCallable callable = new ThreadExample.MyCallable();
         // 使用 FutureTask 包装 Callable 任务
         FutureTask<Integer> futureTask = new FutureTask<>(callable);
-        // 创建一个线程来执行该任务
+        // 创建一个线程来执行该任务06+  7
         Thread thread1 = new Thread(futureTask);
         thread1.start();
 
