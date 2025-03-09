@@ -1,4 +1,4 @@
-package com.basic.jvm;
+package com.basic.jvm.demo4;
 
 import sun.misc.Unsafe;
 

@@ -1,4 +1,4 @@
-package com.basic.jvm;
+package com.basic.jvm.demo1;
 
 /**
  * @Author hongjian.li
@@ -8,8 +8,8 @@ package com.basic.jvm;
 public class Demo1_2 {
 
     /**
-      *@Author hongjian.li
-      *@Description 1. 栈溢出主要是两个原因，一个是栈帧分配过多，一个是栈帧分配过大
+      *@Author hongjian.li  stackoverflow
+      *@Description 1. 栈溢出主要是两个原因，一个是栈帧分配过多，一个是栈帧分配过大 -xxs
       **/
 
     private static int count;

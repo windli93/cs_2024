@@ -1,4 +1,4 @@
-package com.basic.jvm;
+package com.basic.jvm.demo1;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,31 +1,27 @@
-package com.basic.jvm;
+package com.basic.jvm.demo4;
 
 /**
  * @Author hongjian.li
- * @Description 同步锁的使用
+ * @Description  工作内存中的数据还没同步回主内存，下一个线程就已经开始对共享变量进行修改，时间片轮换造成了数据一次
  * @Date 3/2/2025 2:58 PM
  **/
-public class Demo4_1 {
+public class Demo4_02 {
 
     static int i = 0;
     static Object obj = new Object();
 
     public static void main(String[] args) throws InterruptedException {
         Thread t1 = new Thread(() -> {
-            synchronized (obj) {
-                for (int j = 0; j < 5000; j++) {
-                    i++;
-                    System.out.println("t1 " + i);
-                }
+            for (int j = 0; j < 5000; j++) {
+                i++;
+                System.out.println("t1 " + i);
             }
         });
 
         Thread t2 = new Thread(() -> {
-            synchronized (obj) {
-                for (int j = 0; j < 5000; j++) {
-                    i--;
-                    System.out.println("t2 " + i);
-                }
+            for (int j = 0; j < 5000; j++) {
+                i--;
+                System.out.println("t2 " + i);
             }
         });
 
