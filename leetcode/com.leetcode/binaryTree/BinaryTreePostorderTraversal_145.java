@@ -40,7 +40,7 @@ public class BinaryTreePostorderTraversal_145 {
             return; // 节点为空，直接返回
         }
 
-        //后序遍历就是->先根节点->再右子树->再左子树
+        //后序遍历就是->先左子树->再右子树->再根节点
         traversal(root.left, list);
         traversal(root.right, list);
         list.add(root.val);
