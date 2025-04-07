@@ -1,0 +1,90 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins
+  namespace: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      serviceAccountName: jenkins
+      containers:
+        - name: jenkins
+          env:
+          - name: JAVA_OPTS
+            value: |
+              -XshowSettings:vm
+              -Dhudson.slaves.NodeProvisioner.initialDelay=0
+              -Dhudson.slaves.NodeProvisioner.MARGIN=50
+              -Dhudson.slaves.NodeProvisioner.MARGIN0=0.85
+              -Duser.timezone=Asia/Shanghai
+              -Dfile.encoding=UTF-8
+              -Djava.awt.headless=true
+              -javaagent:/opt/jmx_exporter/jmx_exporter.jar=9999:/opt/jmx_exporter/jmx.yml
+          - name: JENKINS_OPTS
+            value: |
+              --prefix=/
+              --sessionTimeout=1440
+              --sessionEviction=1440
+          image: harbor.github.icu/jenkins:2.484-jmx_0.19.0
+          securityContext:
+            runAsUser: 0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: web
+              protocol: TCP
+            - containerPort: 50000
+              name: agent
+              protocol: TCP
+            - containerPort: 9999
+              name: jmx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: "1"
+              memory: 1Gi
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /login
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 12
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /login
+            initialDelaySeconds: 60
+          volumeMounts:
+            - mountPath: /var/jenkins_home
+              name: jenkins-volume
+              subPath: jenkins-home
+            - mountPath: /etc/localtime
+              name: localtime
+            - mountPath: /opt/jmx_exporter/jmx.yml
+              name: jmx-conf
+              subPath: jmx.yml
+      imagePullSecrets:
+        - name: registry-auth
+      volumes:
+        - name: jenkins-volume
+          persistentVolumeClaim:
+            claimName: jenkins
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+        - name: jmx-conf
+          configMap:
+            name: jmx-conf

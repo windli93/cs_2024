@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+data:
+  alertmanager.yml: |
+    ###
+    # 告警级别分类：
+    # 紧急告警( critical ):P0
+    # 警告告警( warning ):P1
+    # 信息告警( info ):P2
+    global:
+      resolve_timeout: 5m
+
+    inhibit_rules:
+      - source_match_re: # 严重抑制警告
+          severity: critical
+        target_match_re:
+          severity: warning
+        equal: [ all, alertname ]
+      - source_match_re: # 节点失联抑制备份失败|失联
+          alertname: 节点失联
+        target_match_re:
+          alertname: 备份失联|备份失败
+        equal: [ all ]
+      - source_match_re: # 不通抑制丢包
+          alertname: 乒不通了
+        target_match_re:
+          alertname: 乒丢包了
+        equal: [ all ]
+      - source_match_re: # 应用失联抑制进程退出
+          alertname: 应用失联
+        target_match_re:
+          alertname: 进程退出
+        equal: [ all ]
+      - source_match_re: # 证书有效期抑制证书有效期
+          alertname: SSL证书有效期
+        target_match_re:
+          alertname: SSL证书有效期
+        equal: [ alertname ]
+
+    route:
+      group_by: ['alertname','job']
+      group_wait: 3m
+      group_interval: 5m
+      repeat_interval: 24h
+      receiver: 'test'
+      routes:
+      - receiver: "webhook"
+        match_re: { level: "(.*)?P([0-3].*)?" }
+        continue: true
+
+    receivers:
+      - name: 'test'
+      - name: 'webhook'
+        webhook_configs:
+          - url: 'https://prometheusalert.github.icu/prometheusalert?type=fs&tpl=prometheus-test&fsurl=https://open.feishu.cn/open-apis/bot/v2/hook/xxxx-xxxx-xxxx-xxxx-xxxx'
+            send_resolved: true

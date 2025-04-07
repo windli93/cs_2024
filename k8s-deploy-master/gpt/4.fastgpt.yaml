@@ -1,0 +1,305 @@
+# {{{ postgresql
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgresql
+  namespace: gpt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      containers:
+        - name: postgresql
+          env:
+            - name: POSTGRES_USER
+              value: username
+            - name: POSTGRES_PASSWORD
+              value: password
+            - name: POSTGRES_DB
+              value: postgres
+          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/pgvector:v0.7.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 5432
+            timeoutSeconds: 3
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - "-c"
+                - pg_isready -h localhost -U username -d postgres
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 5432
+              name: postgresql
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data/
+              name: fastgpt
+              subPath: fastgpt/postgresql/data
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: fastgpt
+          persistentVolumeClaim:
+            claimName: fastgpt
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: gpt
+spec:
+  selector:
+    app: postgresql
+  type: ClusterIP
+  ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+# }}}
+
+# {{{ sandbox
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sandbox
+  namespace: gpt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sandbox
+  template:
+    metadata:
+      labels:
+        app: sandbox
+    spec:
+      containers:
+        - name: sandbox
+          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt-sandbox:latest
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 3
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 3000
+              name: sandbox
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sandbox
+  namespace: gpt
+spec:
+  selector:
+    app: sandbox
+  type: ClusterIP
+  ports:
+    - name: sandbox
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+# }}}
+
+# {{{ fastgpt
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastgpt
+  namespace: gpt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastgpt
+  template:
+    metadata:
+      labels:
+        app: fastgpt
+    spec:
+      containers:
+        - name: fastgpt
+          env:
+            # root 密码，用户名为: root。如果需要修改 root 密码，直接修改这个环境变量，并重启即可。
+            - name: DEFAULT_ROOT_PSW
+              value: "1234"
+            # AI模型的API地址哦。务必加 /v1。这里默认填写了OneApi的访问地址。
+            - name: OPENAI_BASE_URL
+              value: http://oneapi:3000/v1
+            # AI模型的API Key。（这里默认填写了OneAPI的快速默认key，测试通后，务必及时修改）
+            - name: CHAT_API_KEY
+              value: sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx # 修改之，替换成oneapi中ai模型的api key
+            # 数据库最大连接数
+            - name: DB_MAX_LINK
+              value: "30"
+            # 登录凭证密钥
+            - name: TOKEN_KEY
+              value: any
+            # root的密钥，常用于升级时候的初始化请求
+            - name: ROOT_KEY
+              value: root_key
+            # 文件阅读加密
+            - name: FILE_TOKEN_KEY
+              value: filetoken
+            # MongoDB 连接参数. 用户名myusername,密码mypassword。
+            - name: MONGODB_URI
+              value: mongodb://root:123456@mongodb-0.database.svc:27017,mongodb-1.mongodb.database.svc:27017,mongodb-2.mongodb.database.svc:27017/fastgpt?authSource=admin
+            # pg 连接参数
+            - name: PG_URL
+              value: postgresql://username:password@postgresql:5432/postgres
+            # sandbox 地址
+            - name: SANDBOX_URL
+              value: http://sandbox:3000
+            # 日志等级: debug, info, warn, error
+            - name: LOG_LEVEL
+              value: info
+            - name: STORE_LOG_LEVEL
+              value: warn
+          image: registry.cn-hangzhou.aliyuncs.com/fastgpt/fastgpt:v4.8.11
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 3000
+            timeoutSeconds: 3
+          readinessProbe:
+            tcpSocket:
+              port: 3000
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 3000
+              name: fastgpt
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /app/data/config.json
+              name: fastgpt-config
+              subPath: config.json
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: fastgpt
+          persistentVolumeClaim:
+            claimName: fastgpt
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+        - name: fastgpt-config
+          configMap:
+            defaultMode: 0644
+            name: fastgpt-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastgpt
+  namespace: gpt
+spec:
+  selector:
+    app: fastgpt
+  type: ClusterIP
+  ports:
+    - name: fastgpt
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fastgpt
+  namespace: gpt
+  labels:
+    app: fastgpt
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: fastgpt.github.icu
+    http:
+      paths:
+      - backend:
+          service:
+            name: fastgpt
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - fastgpt.github.icu
+    secretName: github-tls
+# }}}

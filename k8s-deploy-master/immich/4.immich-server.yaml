@@ -1,0 +1,139 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: immich-server
+  template:
+    metadata:
+      labels:
+        app: immich-server
+    spec:
+      containers:
+        - name: immich-server
+          env:
+          - name: IMMICH_TELEMETRY_INCLUDE
+            value: all
+          - name: UPLOAD_LOCATION
+            value: "./library"
+          - name: DB_DATA_LOCATION
+            value: "./postgres"
+          - name: IMMICH_VERSION
+            value: release
+          - name: DB_PASSWORD
+            value: postgres
+          - name: DB_USERNAME
+            value: postgres
+          - name: DB_DATABASE_NAME
+            value: immich
+          - name: REDIS_HOSTNAME
+            value: redis
+          - name: REDIS_PORT
+            value: "6379"
+          image: ghcr.io/immich-app/immich-server:release
+          tty: true
+          securityContext:
+            runAsUser: 0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            tcpSocket:
+              port: 2283
+            timeoutSeconds: 5
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            successThreshold: 1
+            tcpSocket:
+              port: 2283
+            timeoutSeconds: 5
+          ports:
+            - containerPort: 2283
+              name: server
+              protocol: TCP
+            - containerPort: 8081
+              name: api
+              protocol: TCP
+            - containerPort: 8082
+              name: microservices
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /usr/src/app/upload
+              name: immich
+              subPath: upload
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: immich
+          persistentVolumeClaim:
+            claimName: immich
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: immich-server
+  namespace: immich
+spec:
+  ports:
+    - name: immich-server
+      protocol: TCP
+      port: 2283
+      targetPort: 2283
+    - name: immich-api
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+    - name: immich-microservices
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP
+  selector:
+    app: immich-server
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: immich-server
+  namespace: immich
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: "5000m"
+  labels:
+    app: immich-server
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: immich.github.icu
+    http:
+      paths:
+      - backend:
+          service:
+            name: immich-server
+            port:
+              number: 2283
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - immich.github.icu
+    secretName: github-tls

@@ -1,0 +1,79 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab
+  namespace: gitlab
+  labels:
+    app: gitlab
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitlab
+  template:
+    metadata:
+      labels:
+        app: gitlab
+    spec:
+      containers:
+      - name: gitlab
+        image: gitlab/gitlab-ce:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          - containerPort: 443
+            name: https
+            protocol: TCP
+          - containerPort: 22
+            name: ssh
+            protocol: TCP
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 2Gi
+#        livenessProbe:
+#          httpGet:
+#            path: /
+#            port: 80
+#            scheme: HTTP
+#          initialDelaySeconds: 300
+#          timeoutSeconds: 5
+#          periodSeconds: 10
+#          successThreshold: 1
+#          failureThreshold: 3
+#        readinessProbe:
+#          httpGet:
+#            path: /
+#            port: 80
+#            scheme: HTTP
+#          initialDelaySeconds: 5
+#          timeoutSeconds: 30
+#          periodSeconds: 10
+#          successThreshold: 1
+#          failureThreshold: 3
+        volumeMounts:
+          - name: gitlab
+            subPath: data
+            mountPath: /var/opt/gitlab
+          - name: gitlab
+            subPath: log
+            mountPath: /var/log/gitlab
+          - name: gitlab
+            subPath: config
+            mountPath: /etc/gitlab
+          - mountPath: /etc/localtime
+            name: localtime
+      volumes:
+        - name: gitlab
+          persistentVolumeClaim:
+            claimName: gitlab
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime

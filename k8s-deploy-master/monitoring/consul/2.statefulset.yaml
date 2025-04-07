@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: consul
+  name: consul
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consul
+  serviceName: consul
+  template:
+    metadata:
+      labels:
+        app: consul
+    spec:
+      containers:
+      - name: consul
+        image: swr.cn-south-1.myhuaweicloud.com/starsl.cn/consul:latest
+        imagePullPolicy: IfNotPresent
+        args:
+          - agent
+        ports:
+        - containerPort: 8500
+        - containerPort: 8300
+        - containerPort: 8301
+        - containerPort: 8302
+        - containerPort: 8600
+        - containerPort: 8600
+          protocol: UDP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        securityContext:
+          privileged: true
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 8500
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 8500
+          timeoutSeconds: 3
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: data
+          mountPath: /consul/data
+          subPath: consul/data
+        - name: consul-config
+          mountPath: /consul/config/consul.hcl
+          subPath: consul.hcl
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: consul-config
+        configMap:
+          name: consul-config
+          items:
+            - key: consul.hcl
+              path: consul.hcl
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: nfs-storage
+        volumeMode: Filesystem

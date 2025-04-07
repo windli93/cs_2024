@@ -1,0 +1,46 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: portainer
+  namespace: portainer
+spec:
+  selector:
+    matchLabels:
+      app: portainer
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: portainer
+    spec:
+      serviceAccountName: portainer-sa-clusteradmin
+      containers:
+      - name: portainer
+        image: portainer/portainer-ce:latest
+        volumeMounts:
+        - mountPath: /etc/localtime
+          name: localtime
+        - mountPath: /data
+          name: portainer
+          subPath: portainer/data
+        - mountPath: /var/run/docker.sock
+          name: docker-sock
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 200m
+            memory: 500Mi
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: portainer
+        persistentVolumeClaim:
+          claimName: portainer
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock

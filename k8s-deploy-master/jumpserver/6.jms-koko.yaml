@@ -1,0 +1,95 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: koko
+  namespace: jms
+spec:
+  type: NodePort
+  ports:
+    - name: koko-2222
+      port: 2222
+      protocol: TCP
+      targetPort: 2222
+    - name: koko-5000
+      port: 5000
+      protocol: TCP
+      targetPort: 5000
+  selector:
+    app: koko
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: koko
+  namespace: jms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: koko
+  template:
+    metadata:
+      labels:
+        app: koko
+    spec:
+      containers:
+        - name: koko
+          env:
+            - name: CORE_HOST
+              value: http://core:8080
+            - name: BOOTSTRAP_TOKEN
+              value: X3uaAUpf6x83QMcn
+            - name: LOG_LEVEL
+              value: "ERROR"
+          image: jumpserver/koko:v2.28.21
+          tty: true
+          securityContext:
+            runAsUser: 0
+            privileged: true
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 2222
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              port: 5000
+              path: /koko/health/
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          ports:
+            - containerPort: 2222
+              name: koko-2222
+              protocol: TCP
+            - containerPort: 5000
+              name: koko-5000
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: "0.5"
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /opt/koko/data
+              name: jms
+              subPath: koko/data
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: jms
+          persistentVolumeClaim:
+            claimName: jms
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime

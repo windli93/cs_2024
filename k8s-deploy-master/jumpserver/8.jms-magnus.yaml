@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: magnus
+  namespace: jms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: magnus
+  template:
+    metadata:
+      labels:
+        app: magnus
+    spec:
+      containers:
+        - name: magnus
+          env:
+            - name: CORE_HOST
+              value: http://core:8080
+            - name: BOOTSTRAP_TOKEN
+              value: X3uaAUpf6x83QMcn
+            - name: LOG_LEVEL
+              value: "ERROR"
+          image: jumpserver/magnus:v2.28.21
+          tty: true
+          securityContext:
+            runAsUser: 0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - "-c"
+                - /bin/ps aux | grep -v grep | grep magnus
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - "-c"
+                - /bin/ps aux | grep -v grep | grep magnus
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "0.5"
+              memory: 1Gi
+            requests:
+              cpu: "0.25"
+              memory: 512Mi
+          volumeMounts:
+            - mountPath: /opt/magnus/data
+              name: jms
+              subPath: magnus/data
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: jms
+          persistentVolumeClaim:
+            claimName: jms
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime

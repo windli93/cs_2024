@@ -1,0 +1,15 @@
+# application.yml
+dubbo:
+  registry:
+    address: nacos://192.168.47.158:8848?username=nacos&password=nacos
+    # This will enable application-level service discovery only (the recommended service discovery method for Dubbo3).
+    # For users upgrading from Dubbo2.x, please set the value to 'all' for smooth migration.
+    register-mode: instance
+  protocol:
+    name: dubbo
+    port: 50052
+  application:
+    name: DubboConsumer
+    logger: slf4j
+server:
+  port: 8082

@@ -1,0 +1,81 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.21.6
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 80
+            timeoutSeconds: 3
+          securityContext:
+            runAsUser: 0
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
+            - containerPort: 443
+              name: https
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 80
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: 500m
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: localtime
+            - mountPath: /etc/nginx/vhost
+              name: nginx-vhost
+            - mountPath: /var/log/nginx
+              name: nginx-log
+            - mountPath: /etc/nginx/nginx.conf
+              name: nginx-conf
+              subPath: nginx.conf
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: ""
+        - name: nginx-vhost
+          persistentVolumeClaim:
+            claimName: nginx-vhost
+        - name: nginx-log
+          persistentVolumeClaim:
+            claimName: nginx-log
+        - name: nginx-conf
+          configMap:
+            defaultMode: 420
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+

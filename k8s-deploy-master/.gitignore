@@ -1,0 +1,4 @@
+*.swp
+script/*.key
+script/*.pem
+script/*.crt

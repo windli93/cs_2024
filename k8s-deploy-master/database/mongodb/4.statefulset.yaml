@@ -1,0 +1,100 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: database
+spec:
+  podManagementPolicy: Parallel
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mongodb
+  serviceName: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      initContainers:
+      - name: init-mkdir
+        image: busybox
+        command:
+        - /bin/sh
+        - -c
+        - |
+          mkdir -p /var/lib/mongodb
+          mkdir -p /var/log/mongodb
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: data
+            mountPath: /var/lib/mongodb
+            subPath: mongodb/data
+          - name: data
+            mountPath: /var/log/mongodb
+            subPath: mongodb/log
+      containers:
+      - command:
+        - mongod
+        - -f
+        - /etc/mongod.conf
+        - --bind_ip_all
+        image: mongo:4.4.9
+        imagePullPolicy: IfNotPresent
+        name: mongodb
+        ports:
+        - containerPort: 27017
+          protocol: TCP
+          name: mongodb
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 0.5Gi
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: mongodb-conf
+            mountPath: /etc/mongod.conf
+            subPath: mongod.conf
+          - name: data
+            mountPath: /var/lib/mongodb
+            subPath: mongodb/data
+          - name: data
+            mountPath: /var/log/mongodb
+            subPath: mongodb/log
+          - name: mongodb-keyfile
+            mountPath: /etc/mongodb-keyfile
+            subPath: mongodb-keyfile
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: ""
+        - name: mongodb-conf
+          configMap:
+            defaultMode: 420
+            name: mongodb-conf
+            items:
+            - key: mongod.conf
+              path: mongod.conf
+        - name: mongodb-keyfile
+          secret:
+            secretName: mongodb-keyfile
+            defaultMode: 0600
+  volumeClaimTemplates:
+  - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 50Gi
+      storageClassName: nfs-storage
+      volumeMode: Filesystem

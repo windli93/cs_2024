@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  mysql.db.host: mysql.database.svc.cluster.local
+  mysql.db.name: nacos_config
+  mysql.password: 123456
+  mysql.port: "3306"
+  mysql.user: root
+  mysql.param: characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
+kind: ConfigMap
+metadata:
+  name: nacos-conf
+  namespace: midplatform

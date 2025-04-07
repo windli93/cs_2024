@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="dubbo_provider" />
+        <module name="spring_starter_demo" />
+        <module name="dubbo_api" />
+        <module name="rabbitmq_provider" />
+        <module name="rabbitmq_consumer" />
+        <module name="rocketmq_api" />
+        <module name="rocketmq_consumer" />
+        <module name="rocketmq_provider" />
+        <module name="dubbo_consumer" />
+        <module name="rabbitmq_api" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="distribute_dubbo_demo" options="" />
+      <module name="dubbo_api" options="-parameters" />
+      <module name="dubbo_consumer" options="-parameters" />
+      <module name="dubbo_provider" options="-parameters" />
+      <module name="rabbitmq_api" options="-parameters" />
+      <module name="rabbitmq_consumer" options="-parameters" />
+      <module name="rabbitmq_demo" options="-parameters" />
+      <module name="rabbitmq_provider" options="-parameters" />
+      <module name="rocketmq_api" options="-parameters" />
+      <module name="rocketmq_consumer" options="-parameters" />
+      <module name="rocketmq_demo" options="-parameters" />
+      <module name="rocketmq_provider" options="-parameters" />
+      <module name="spring_starter_demo" options="-parameters" />
+    </option>
+  </component>
+</project>

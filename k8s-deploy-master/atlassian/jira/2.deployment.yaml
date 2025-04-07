@@ -1,0 +1,99 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jira
+  namespace: atlassian
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jira
+  template:
+    metadata:
+      labels:
+        app: jira
+    spec:
+      containers:
+        - name: jira
+          env:
+            - name: TZ
+              value: Asia/Shanghai
+            - name: JAVA_OPTS
+              value: "-javaagent:/var/atlassian/atlassian-agent.jar"
+            - name: JVM_MINIMUM_MEMORY
+              value: 4096m
+            - name: JVM_MAXIMUM_MEMORY
+              value: 4096m
+            - name: JVM_RESERVED_CODE_CACHE_SIZE
+              value: 512m
+            - name: RUN_UID
+              value: "0"
+            - name: RUN_GID
+              value: "0"
+            - name: RUN_USER
+              value: root
+            - name: RUN_GROUP
+              value: root
+          image: harbor.github.icu/public/jira-software:9.9.0
+          securityContext:
+            privileged: true
+            runAsUser: 0
+            runAsGroup: 0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: web
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "2"
+              memory: 6Gi
+            requests:
+              cpu: "1"
+              memory: 4Gi
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+            timeoutSeconds: 5
+            failureThreshold: 12
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 60
+          volumeMounts:
+            - mountPath: /var/atlassian/application-data/jira
+              name: jira
+              subPath: jira
+            - mountPath: /opt/atlassian/jira/conf/server.xml
+              name: jira-config
+              subPath: server.xml
+            - mountPath: /etc/localtime
+              name: localtime
+      initContainers:
+      - command:
+        - find
+        - /var/atlassian/application-data/jira
+        - -type
+        - f
+        - -name
+        - lock
+        - -delete
+        image: harbor.github.icu/public/busybox
+        name: delete-lock-file
+        volumeMounts:
+        - mountPath: /var/atlassian/application-data/jira
+          name: jira
+          subPath: jira
+      volumes:
+        - name: jira
+          persistentVolumeClaim:
+            claimName: jira
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+        - name: jira-config
+          configMap:
+            name: jira-config

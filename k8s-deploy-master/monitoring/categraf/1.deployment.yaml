@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: categraf
+  name: categraf
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: categraf
+  template:
+    metadata:
+      labels:
+        app: categraf
+    spec:
+      containers:
+      - name: categraf
+        env:
+          - name: HOSTENAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          - name: HOSTIP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.hostIP
+          - name: TZ
+            value: Asia/Shanghai
+        image: flashcatcloud/categraf:latest
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: categraf-config
+          mountPath: /etc/categraf/conf
+        - name: categraf-vsphere
+          mountPath: /etc/categraf/conf/input.vsphere
+        - name: categraf-aliyun
+          mountPath: /etc/categraf/conf/input.aliyun
+        - name: categraf-prometheus
+          mountPath: /etc/categraf/conf/input.prometheus
+        - name: categraf-processes
+          mountPath: /etc/categraf/conf/input.processes
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: categraf-config
+        configMap:
+          defaultMode: 420
+          name: categraf-config
+      - name: categraf-vsphere
+        configMap:
+          defaultMode: 420
+          name: categraf-vsphere
+      - name: categraf-aliyun
+        configMap:
+          defaultMode: 420
+          name: categraf-aliyun
+      - name: categraf-prometheus
+        configMap:
+          defaultMode: 420
+          name: categraf-prometheus
+      - name: categraf-processes
+        configMap:
+          defaultMode: 420
+          name: categraf-processes

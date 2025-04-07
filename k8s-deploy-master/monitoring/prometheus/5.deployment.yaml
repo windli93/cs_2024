@@ -1,0 +1,133 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: prometheus
+  name: prometheus
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      serviceAccountName: prometheus
+      containers:
+      - name: prometheus
+        image: prom/prometheus:latest
+        imagePullPolicy: IfNotPresent
+        args:
+        - --storage.tsdb.path=/var/lib/prometheus
+        - --storage.tsdb.retention.time=1d
+        - --storage.tsdb.retention.size=5GB
+#        - --web.config.file=/etc/prometheus/web.yml
+        - --web.console.libraries=/etc/prometheus/console_libraries
+        - --web.console.templates=/etc/prometheus/consoles
+        - --web.listen-address=0.0.0.0:9090
+        - --web.enable-admin-api
+        - --web.enable-lifecycle
+        - --web.external-url=https://prometheus.github.icu
+        - --config.file=/etc/prometheus/prometheus.yml
+        ports:
+        - containerPort: 9090
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 3Gi
+          requests:
+            cpu: 100m
+            memory: 2Gi
+        securityContext:
+          privileged: true
+          runAsUser: 0
+          runAsGroup: 0
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /-/healthy
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /-/ready
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 3
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: prometheus-config
+          mountPath: /etc/prometheus
+        - name: prometheus-data
+          mountPath: /var/lib/prometheus
+          subPath: prometheus
+      - name: configmap-reload
+        image: jimmidyson/configmap-reload:v0.9.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - -volume-dir=/etc/prometheus
+          - -webhook-url=http://localhost:9090/-/reload
+          - -webhook-method=POST
+          - -webhook-retries=1
+          - -webhook-status-code=200
+          - -web.listen-address=:9533
+          - -web.telemetry-path=/metrics
+        ports:
+        - containerPort: 9533
+          name: http
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9533
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9533
+          timeoutSeconds: 3
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: prometheus-config
+            mountPath: /etc/prometheus
+      initContainers:
+      - name: delete-wal-lock-file
+        image: busybox
+        command: [find , /var/lib/prometheus , -type , f , -name ,  'lock' , -delete]
+        volumeMounts:
+          - name: prometheus-data
+            mountPath: /var/lib/prometheus
+            subPath: prometheus
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: prometheus-config
+        configMap:
+          defaultMode: 420
+          name: prometheus-config
+      - name: prometheus-data
+        persistentVolumeClaim:
+          claimName: prometheus-data

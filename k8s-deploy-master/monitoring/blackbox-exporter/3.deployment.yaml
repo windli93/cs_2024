@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: blackbox-exporter
+  name: blackbox-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blackbox-exporter
+  template:
+    metadata:
+      labels:
+        app: blackbox-exporter
+    spec:
+      containers:
+      - name: blackbox-exporter
+        image: prom/blackbox-exporter:latest
+        imagePullPolicy: IfNotPresent
+        args:
+        - --config.file=/etc/blackbox-exporter/blackbox-exporter.yml
+        - --web.listen-address=0.0.0.0:9115
+        ports:
+        - containerPort: 9115
+          name: http
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9115
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9115
+          timeoutSeconds: 3
+        volumeMounts:
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: blackbox-config
+          mountPath: /etc/blackbox-exporter
+      - name: configmap-reload
+        image: jimmidyson/configmap-reload:v0.9.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - -volume-dir=/etc/blackbox-exporter
+          - -webhook-url=http://localhost:9115/-/reload
+          - -webhook-method=POST
+          - -webhook-retries=1
+          - -webhook-status-code=200
+          - -web.listen-address=:9533
+          - -web.telemetry-path=/metrics
+        ports:
+        - containerPort: 9533
+          name: http
+          protocol: TCP
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9533
+          timeoutSeconds: 3
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          successThreshold: 1
+          tcpSocket:
+            port: 9533
+          timeoutSeconds: 3
+        volumeMounts:
+          - name: localtime
+            mountPath: /etc/localtime
+          - name: blackbox-config
+            mountPath: /etc/blackbox-exporter
+      volumes:
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: blackbox-config
+        configMap:
+          name: blackbox-config
+          defaultMode: 420

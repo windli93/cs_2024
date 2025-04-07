@@ -1,0 +1,73 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nexus3
+  namespace: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexus3
+  template:
+    metadata:
+      labels:
+        app: nexus3
+    spec:
+      containers:
+        - name: nexus3
+          image: sonatype/nexus3
+          securityContext:
+            runAsUser: 0
+          imagePullPolicy: IfNotPresent
+#          livenessProbe:
+#            failureThreshold: 5
+#            initialDelaySeconds: 30
+#            periodSeconds: 5
+#            successThreshold: 1
+#            tcpSocket:
+#              port: 8081
+#            timeoutSeconds: 3
+#          readinessProbe:
+#            httpGet:
+#              path: /
+#              port: 8081
+#              scheme: HTTP
+#            initialDelaySeconds: 5
+#            timeoutSeconds: 30
+#            periodSeconds: 10
+#            successThreshold: 1
+#            failureThreshold: 3
+          ports:
+            - containerPort: 8081
+              name: web
+              protocol: TCP
+          resources:
+            limits:
+              cpu: "1"
+              memory: 3Gi
+            requests:
+              cpu: "0.5"
+              memory: 2Gi
+          volumeMounts:
+            - mountPath: /nexus-data
+              name: nexus3
+              subPath: nexus-data
+            - mountPath: /etc/localtime
+              name: localtime
+      initContainers:
+      - name: delete-wal-lock-file
+        image: busybox
+        command: [find , /nexus-data , -type , f , -name , '*.wal' , -o , -name , '*.lock', -o , -name , 'lock' , -delete]
+        volumeMounts:
+          - name: nexus3
+            mountPath: /nexus-data
+            subPath: nexus-data
+      volumes:
+        - name: nexus3
+          persistentVolumeClaim:
+            claimName: nexus3
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime

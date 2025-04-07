@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: victoria
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: victoria
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: victoria
+    spec:
+      containers:
+        - name: victoria
+          image: victoriametrics/victoria-metrics:latest
+          imagePullPolicy: IfNotPresent
+          args:
+#            - -maxLabelsPerTimeseries=200 # 允许指标包含的最大标签数为200
+            - -retentionPeriod=1
+            - -storageDataPath=/var/lib/victoria-metrics-data
+            - -httpListenAddr=:8428
+            - -vmalert.proxyURL=http://prometheus:9090
+            - -loggerTimezone=Asia/Shanghai
+          securityContext:
+            runAsUser: 0
+          ports:
+            - containerPort: 8428
+              name: web
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8428
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 5
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            tcpSocket:
+              port: 8428
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: "2"
+              memory: 2Gi
+            requests:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - mountPath: /etc/localtime
+              name: localtime
+            - mountPath: /var/lib/victoria-metrics-data
+              name: victoria
+              subPath: victoria-metrics-data
+      initContainers:
+      - name: delete-lock-file
+        image: busybox
+        command: [find, /var/lib/victoria-metrics-data, -type , f , -name , flock.lock , -delete]
+        volumeMounts:
+          - name: victoria
+            mountPath: /var/lib/victoria-metrics-data
+            subPath: victoria-metrics-data
+      volumes:
+        - name: localtime
+          hostPath:
+            path: /etc/localtime
+            type: ""
+        - name: victoria
+          persistentVolumeClaim:
+            claimName: victoria

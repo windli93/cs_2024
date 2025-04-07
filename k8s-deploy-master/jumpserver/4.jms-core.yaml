@@ -1,0 +1,118 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core
+  namespace: jms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: core
+  template:
+    metadata:
+      labels:
+        app: core
+    spec:
+      containers:
+        - name: core
+          env:
+            - name: SECRET_KEY
+              value: 0imoXuphwWKE6b5JuJrJTNjvD9uGhw4sRrbW6TXddPOiX8bmnw
+            - name: BOOTSTRAP_TOKEN
+              value: X3uaAUpf6x83QMcn
+            - name: DEBUG
+              value: "FALSE"
+            - name: LOG_LEVEL
+              value: "ERROR"
+            - name: DB_HOST
+              value: mysql
+            - name: DB_PORT
+              value: "3306"
+            - name: DB_USER
+              value: root
+            - name: DB_PASSWORD
+              value: "123456"
+            - name: DB_NAME
+              value: jumpserver
+            - name: REDIS_HOST
+              value: redis
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "123456"
+          image: jumpserver/core:v2.28.21
+          tty: true
+          args:
+            - start
+            - web
+          securityContext:
+            runAsUser: 0
+          imagePullPolicy: IfNotPresent
+          resources:
+            limits:
+              cpu: "1"
+              memory: 2Gi
+            requests:
+              cpu: "0.5"
+              memory: 1Gi
+#          livenessProbe:
+#            failureThreshold: 5
+#            initialDelaySeconds: 60
+#            periodSeconds: 30
+#            successThreshold: 1
+#            tcpSocket:
+#              port: 8080
+#            timeoutSeconds: 5
+#          readinessProbe:
+#            failureThreshold: 5
+#            initialDelaySeconds: 60
+#            periodSeconds: 30
+#            successThreshold: 1
+#            httpGet:
+#              port: 8080
+#              path: /api/health/
+#            timeoutSeconds: 5
+          ports:
+            - containerPort: 8080
+              name: core-8080
+              protocol: TCP
+            - containerPort: 8070
+              name: core-8070
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /opt/jumpserver/data
+              name: jms
+              subPath: core/data
+            - mountPath: /opt/jumpserver/logs
+              name: jms
+              subPath: core/logs
+            - mountPath: /etc/localtime
+              name: localtime
+      volumes:
+        - name: jms
+          persistentVolumeClaim:
+            claimName: jms
+        - hostPath:
+            path: /etc/localtime
+            type: ""
+          name: localtime
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: core
+  namespace: jms
+spec:
+  ports:
+    - name: core-8080
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+    - name: core-8070
+      protocol: TCP
+      port: 8070
+      targetPort: 8070
+  type: ClusterIP
+  selector:
+    app: core

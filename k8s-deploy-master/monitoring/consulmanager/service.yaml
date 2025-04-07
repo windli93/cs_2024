@@ -1,0 +1,25 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: consulmanager
+  namespace: monitoring
+  labels:
+    app: consulmanager
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: consulmanager.github.icu
+    http:
+      paths:
+      - backend:
+          service:
+            name: consulmanager
+            port:
+              number: 1026
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - consulmanager.github.icu
+    secretName: github-tls

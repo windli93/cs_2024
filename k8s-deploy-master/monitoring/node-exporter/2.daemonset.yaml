@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: node-exporter
+  name: node-exporter
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: node-exporter
+  template:
+    metadata:
+      labels:
+        app: node-exporter
+    spec:
+      hostNetwork: true
+      containers:
+      - name: node-exporter
+        image: prom/node-exporter:latest
+        args:
+        - --collector.textfile.directory=/var/log/prometheus/
+        - --log.level=info
+        - --collector.mountstats
+        - --collector.processes
+#        - --no-collector.hwmon
+        - --no-collector.infiniband
+        - --no-collector.zfs
+        - --web.listen-address=0.0.0.0:9100
+        - --path.procfs=/host/proc
+        - --path.sysfs=/host/sys
+        - --collector.filesystem.ignored-mount-points='^/(dev|proc|sys|run)($$|/)'
+        ports:
+        - containerPort: 9100
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: proc
+          mountPath: /host/proc
+          readOnly: true
+        - name: sys
+          mountPath: /host/sys
+          readOnly: true
+        - name: localtime
+          mountPath: /etc/localtime
+        - name: log
+          mountPath: /var/log/prometheus
+      volumes:
+      - name: proc
+        hostPath:
+          path: /proc
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+          type: ""
+      - name: log
+        hostPath:
+          path: /var/log/prometheus
+          type: ""

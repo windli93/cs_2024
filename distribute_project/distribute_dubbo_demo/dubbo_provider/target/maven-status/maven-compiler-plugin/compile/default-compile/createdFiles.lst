@@ -1,0 +1,15 @@
+cn\com\dubbo\provider\event\OrderEventFactory.class
+cn\com\dubbo\provider\event\TypedEvent.class
+cn\com\dubbo\provider\event\OrderEvent.class
+cn\com\dubbo\provider\event\DisruptorEventDispatcher.class
+cn\com\dubbo\provider\event\PaymentEventHandler.class
+cn\com\dubbo\provider\event\PaymentEvent.class
+cn\com\dubbo\provider\service\impl\DemoServiceImpl.class
+cn\com\dubbo\provider\controller\DemoController.class
+cn\com\dubbo\provider\event\TypedEventTranslator.class
+cn\com\dubbo\provider\DubboProviderApplication.class
+cn\com\dubbo\provider\event\TypedEventHandler.class
+cn\com\dubbo\provider\event\DisruptorConfig.class
+cn\com\dubbo\provider\event\OrderEventHandler.class
+cn\com\dubbo\provider\event\EventPublisherService.class
+cn\com\dubbo\provider\event\TypedEventFactory.class
