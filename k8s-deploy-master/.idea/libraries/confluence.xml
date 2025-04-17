@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="confluence">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/atlassian/confluence/atlassian-agent.jar!/" />
+      <root url="jar://$PROJECT_DIR$/atlassian/confluence/mysql-connector-java-8.0.22.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

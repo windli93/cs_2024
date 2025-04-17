@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="hesk">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/tools/hesk/hesk345.zip!/" />
+      <root url="jar://$PROJECT_DIR$/tools/hesk/zh_cmn_hans.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

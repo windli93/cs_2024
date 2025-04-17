@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="plugins">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/sonarqube/extensions/plugins/sonar-l10n-zh-plugin-8.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/sonarqube/extensions/plugins/sonarqube-community-branch-plugin-1.8.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

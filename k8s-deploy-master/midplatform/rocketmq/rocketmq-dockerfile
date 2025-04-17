@@ -1,0 +1,62 @@
+# ========== 构建阶段 ==========
+FROM openjdk:8-jdk-alpine AS builder
+
+# 替换 Alpine 镜像源为阿里云
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# 设置工作目录
+WORKDIR /tmp/rocketmq
+
+# 安装必要工具
+RUN apk add --no-cache \
+    wget \
+    unzip \
+    tar
+
+# 下载 RocketMQ 原始包并解压
+RUN wget https://repo.huaweicloud.com/apache/rocketmq/4.8.0/rocketmq-all-4.8.0-bin-release.zip -O rocketmq.zip \
+    && unzip rocketmq.zip \
+    && mv rocketmq-all-4.8.0-bin-release rocketmq-src
+
+# 修改 JVM 内存配置
+RUN sed -i 's/-Xms[0-9]*[gm]/-Xms1g/; s/-Xmx[0-9]*[gm]/-Xmx1g/' rocketmq-src/bin/runbroker.sh
+
+# 重新打包为 tar.gz
+RUN tar -zcvf rocketmq.tar.gz rocketmq-src \
+    && rm -rf rocketmq-src
+
+# ========== 生产镜像 ==========
+FROM openjdk:8-jre-alpine
+
+# 替换 Alpine 镜像源为阿里云
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
+# 设置中文环境
+ENV LANG zh_CN.UTF-8
+ENV TZ Asia/Shanghai
+
+# 安装中文字体和时区配置
+RUN apk add --no-cache \
+    tzdata \     
+    # 中文字体
+    ttf-dejavu \         
+    # 配置时区
+    && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo "${TZ}" > /etc/timezone
+
+# 复制构建产物
+COPY --from=builder /tmp/rocketmq/rocketmq.tar.gz .
+RUN tar -zxvf rocketmq.tar.gz -C /usr/local/ \
+    && mv /usr/local/rocketmq-src /usr/local/rocketmq-4.8.0 \
+    && mkdir -p /data/rocketmq/store \
+    && rm rocketmq.tar.gz
+
+# 环境变量
+ENV ROCKETMQ_HOME=/usr/local/rocketmq-4.8.0
+ENV PATH=$ROCKETMQ_HOME/bin:$PATH
+
+# Alpine 默认使用 /bin/sh
+CMD ["/bin/sh"]
+
+
+#docker build -t lingyi-rocketmq:1.0 -f rocketmq-dockerfile .

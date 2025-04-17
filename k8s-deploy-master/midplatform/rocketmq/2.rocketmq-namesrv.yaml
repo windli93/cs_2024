@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rocketmq-nameserver
+  name: rocketmq
+  namespace: middlerware
+spec:
+  ports:
+  - port: 9876
+    targetPort: 9876
+    name: rocketmq-nameserver
+    nodePort: 31876
+  type: NodePort    
+  selector:
+    app: rocketmq-nameserver
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rocketmq-nameserver
+  namespace: middlerware
+spec:
+  serviceName: rocketmq-nameserver
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rocketmq-nameserver
+  template:
+    metadata:
+     labels:
+       app: rocketmq-nameserver
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - rocketmq-nameserver
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: rocketmq-nameserver
+        image: lingyi-rocketmq:1.0
+        imagePullPolicy: IfNotPresent
+        command: ["sh","/usr/local/rocketmq-4.8.0/bin/mqnamesrv"]
+        ports:
+        - containerPort: 9876
+          protocol: TCP
+        env:
+        - name: JAVA_OPT
+          value: "-server -XX:ParallelGCThreads=1 -Xms512m -Xmx1g -Xmn512m"
+          #value: "-XX:MaxRAMPercentage=80.0"
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh","-c","touch /tmp/health"]
+        livenessProbe:
+          exec:
+            command: ["test","-e","/tmp/health"]
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 9876
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20

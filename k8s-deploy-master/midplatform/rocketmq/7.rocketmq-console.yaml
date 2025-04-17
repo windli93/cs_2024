@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: rocketmq-console
+  name: rocketmq-console
+  namespace: middlerware
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rocketmq-console
+  template:
+    metadata:
+      labels:
+        app: rocketmq-console
+    spec:
+      containers:
+      - image: apacherocketmq/rocketmq-dashboard:latest
+        name: rocketmq-console
+        imagePullPolicy: IfNotPresent
+        env: 
+        - name: JAVA_OPTS
+          value: "-Drocketmq.namesrv.addr=rocketmq.middlerware.svc.cluster.local:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: rocketmq-console
+  name: rocketmq-console
+  namespace: middlerware
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+    nodePort: 31808
+  type: NodePort
+  selector:
+    app: rocketmq-console

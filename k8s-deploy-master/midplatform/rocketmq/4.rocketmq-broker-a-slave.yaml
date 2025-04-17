@@ -1,0 +1,106 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: broker-a-slave
+  name: broker-a-slave
+  namespace: middlerware
+spec:
+  ports:
+  - port: 20911
+    targetPort: 20911
+    name: broker-port
+    nodePort: 30912
+  type: NodePort     
+  selector:
+    app: broker-a-slave
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: broker-a-slave
+  namespace: middlerware
+spec:
+  serviceName: broker-a-slave
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker-a-slave
+  template:
+    metadata:
+     labels:
+       app: broker-a-slave
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - node1     
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: "app"
+                    operator: In
+                    values:
+                      - broker-a-slave
+              topologyKey: "kubernetes.io/hostname"
+      imagePullSecrets:
+        - name: harborsecret
+      containers:
+      - name: broker-a-slave
+        image: lingyi-rocketmq:1.0
+        imagePullPolicy: IfNotPresent
+        command: ["sh","-c","mqbroker -c /usr/local/rocketmq-4.8.0/conf/broker-a-slave.properties"]
+        env:
+        - name: JAVA_OPT
+          value: "-server -XX:ParallelGCThreads=1 -Xms521m -Xmx1g -Xmn512m"
+          #value: "-XX:MaxRAMPercentage=80.0"
+        volumeMounts:
+          - mountPath: /root/logs
+            name: rocketmq-data
+            subPath: mq-brokeroptlogs
+          - mountPath: /data/rocketmq
+            name: rocketmq-data
+            subPath: mq-brokeroptstore
+          - name: broker-config
+            mountPath: /usr/local/rocketmq-4.8.0/conf/broker-a-slave.properties
+            subPath: broker-a-slave.properties
+        lifecycle:
+          postStart:
+            exec:
+              command: ["/bin/sh","-c","touch /tmp/health"]
+        livenessProbe:
+          exec:
+            command: ["test","-e","/tmp/health"]
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: 20911
+          initialDelaySeconds: 15
+          timeoutSeconds: 5
+          periodSeconds: 20
+      volumes:
+      - name: broker-config
+        configMap:
+          name: rocketmq-config
+          items:
+          - key: broker-a-slave.properties
+            path: broker-a-slave.properties
+  volumeClaimTemplates:
+  - metadata:
+      name: rocketmq-data
+      annotations:
+        volume.beta.kubernetes.io/storage-class: "local"
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Gi
