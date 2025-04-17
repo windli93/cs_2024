@@ -22,8 +22,8 @@ data:
     maxMessageSize=65536
     brokerRole=SLAVE
     flushDiskType=SYNC_FLUSH
-    brokerIP1=192.168.47.154
-    listenPort=30911
+    brokerIP1=192.168.47.155
+    listenPort=30912
   broker-a-master.properties: |
     brokerClusterName=rocketmq-cluster
     brokerName=broker-a
@@ -41,8 +41,8 @@ data:
     storePathRootDir=/data/rocketmq/store
     maxMessageSize=65536
     brokerRole=MASTER
-    brokerIP1=192.168.47.155
-    listenPort=30912    
+    brokerIP1=192.168.47.154
+    listenPort=30911    
   broker-b-slave.properties: |
     brokerClusterName=rocketmq-cluster
     brokerName=broker-b
