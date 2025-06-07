@@ -1,0 +1,38 @@
+<header>
+    <meta charset="UTF-8">
+    <title>中文网页示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</header>
+
+
+<body>
+<!-- 声明式渲染  -->
+<div id="app-10">
+    <div id="demo">{{fullName}}</div>
+</div>
+
+<script>
+    // 构造一个vue实例
+    var app = new Vue({
+        el: '#app-10', //绑定的根节点
+        data: {
+            firstName: 'Foo',
+            lastName: 'Bar',
+            fullName: 'Foo Bar'
+        },
+        // 异步或者需要执行开销较大的事情时候，这个方式最有用
+        // 练习侦听器
+        watch: {
+            firstName: function (val) {
+                this.fullName = val + '' + this.lastName
+            },
+            lastName: function (val) {
+                this.fullName = this.firstName + '' + val
+            }
+        }
+    });
+    // console.log('方式1：data.a =' + data.a)
+    // console.log('方式2：app.data1.a=' + app.data1.a)
+    // console.log('方式3：app.$data.data1.a=' + app.$data.data1.a)
+</script>
+</body>

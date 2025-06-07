@@ -1,0 +1,48 @@
+<header>
+    <meta charset="UTF-8">
+    <title>中文网页示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</header>
+
+
+<body>
+<!-- 声明式渲染  -->
+<div id="app-7">
+    <!--自定义组件进行列表循环-->
+    <ol>
+        <!--
+        现在我们为每个 todo-item 提供 todo 对象
+        todo 对象是变量，即其内容可以是动态的。
+        我们也需要为每个组件提供一个“key”，稍后再
+        作详细解释。
+      -->
+        <todo-item v-for="item in groceryList"
+                   v-bind:todo="item"
+                   v-bind:key="item.id">
+        </todo-item>
+    </ol>
+</div>
+
+<script>
+    <!-- 定义一个组件 -->
+    Vue.component('todo-item', {
+        props: ['todo'],
+        template: '<li>我是Id：{{todo.id}}  我是值：{{todo.text}}</li>'
+    })
+    // 构造一个vue实例
+    var app = new Vue({
+        el: '#app-7', //绑定的根节点
+        data: {       //数据
+            groceryList: [
+                {id: 0, text: '蔬菜'},
+                {id: 1, text: '奶酪'},
+                {id: 2, text: '随便其他什么人吃的东西'},
+            ]
+        },
+        methods: {     //方法
+
+
+        }
+    });
+</script>
+</body>

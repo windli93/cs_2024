@@ -1,9 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="6019496d-6871-4738-87a8-902450eff1c7" name="Default Changelist" comment="添加文件">
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_01.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_02.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_03.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_04.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_05.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_06.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_07.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_08.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_09.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_10.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_11.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vue2_basic/lesson_12.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,6 +37,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2lKWnUado51TZqGWYnucGtP1od6" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="false" id="Update" />
@@ -32,35 +49,81 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="dart.analysis.tool.window.visible" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JavaScript Debug.lesson_01.html.executor": "Run",
+    "JavaScript Debug.lesson_02.html.executor": "Run",
+    "JavaScript Debug.lesson_03.html.executor": "Run",
+    "JavaScript Debug.lesson_04.html.executor": "Run",
+    "JavaScript Debug.lesson_05.html.executor": "Run",
+    "JavaScript Debug.lesson_06.html.executor": "Run",
+    "JavaScript Debug.lesson_07.html.executor": "Run",
+    "JavaScript Debug.lesson_08.html.executor": "Run",
+    "JavaScript Debug.lesson_09.html.executor": "Run",
+    "JavaScript Debug.lesson_10.html.executor": "Run",
+    "JavaScript Debug.lesson_11.html.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/code/cs_2024/JavaScript/vue2_basic",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "Settings.JavaScript",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
   <component name="RebelAgentSelection">
     <selection>jr</selection>
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\code\cs_2024\JavaScript\vue2_basic" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Program\code\cs_2024\JavaScript" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JavaScript Debug.lesson_11.html">
+    <configuration name="lesson_07.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/JavaScript/JavaScript/vue2_basic/lesson_07.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="lesson_08.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/JavaScript/JavaScript/vue2_basic/lesson_08.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="lesson_09.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/JavaScript/JavaScript/vue2_basic/lesson_09.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="lesson_10.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/JavaScript/JavaScript/vue2_basic/lesson_10.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
+    <configuration name="lesson_11.html" type="JavascriptDebugType" temporary="true" nameIsGenerated="true" uri="http://localhost:63342/JavaScript/JavaScript/vue2_basic/lesson_11.html" useBuiltInWebServerPort="true">
+      <method v="2" />
+    </configuration>
     <configuration default="true" type="NodeJSConfigurationType" path-to-js-file="$PROJECT_DIR$/basic/basic_03.js">
       <method v="2" />
     </configuration>
     <configuration name="basic_03.js" type="NodeJSConfigurationType" nameIsGenerated="true" path-to-js-file="basic/basic_03.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.lesson_11.html" />
+        <item itemvalue="JavaScript Debug.lesson_10.html" />
+        <item itemvalue="JavaScript Debug.lesson_09.html" />
+        <item itemvalue="JavaScript Debug.lesson_08.html" />
+        <item itemvalue="JavaScript Debug.lesson_07.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.19416.15" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.19416.15" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -78,6 +141,7 @@
       <workItem from="1725372334838" duration="1997000" />
       <workItem from="1725446472502" duration="3162000" />
       <workItem from="1725522520969" duration="779000" />
+      <workItem from="1749266189506" duration="12066000" />
     </task>
     <task id="LOCAL-00001" summary="添加文件">
       <created>1724929799644</created>
@@ -102,10 +166,13 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="添加文件" />
     <option name="LAST_COMMIT_MESSAGE" value="添加文件" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
