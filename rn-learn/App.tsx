@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View, ScrollView, Image, TextInput } from "react-native";
 import Cat from "./components/cat";
 import Dog from "./components/dog";
+import Cafe from "./components/prop1";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
        <TextInput style={{height: 40, borderColor: 'gray', borderWidth: 1}} placeholder="Type here" />
        <Cat />
        <Dog />
+       <Cafe />
     </ScrollView>
   );
 }
